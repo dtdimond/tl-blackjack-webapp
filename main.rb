@@ -20,3 +20,8 @@ get '/name' do
   erb :get_name
 end
 
+post '/game' do
+  "START GAME!"
+  session[:name] = params[:username]
+  session[:name]
+end
