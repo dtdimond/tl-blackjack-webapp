@@ -21,7 +21,6 @@ get '/name' do
 end
 
 post '/game' do
-  "START GAME!"
   session[:name] = params[:username]
-  session[:name]
+  redirect '/game'
 end
