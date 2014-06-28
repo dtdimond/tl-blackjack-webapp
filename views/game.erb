@@ -1,0 +1,26 @@
+
+<div class="well">
+  <h4>Dealer's Cards</h4>
+    <% session[:dealer_hand].each do |card| %>
+      <%=get_card_image(card)%>
+    <% end %>
+</div>
+<div class="well">
+  <h4>Player's Cards</h4>
+    <% session[:player_hand].each do |card| %>
+      <%=get_card_image(card)%>
+    <% end %>
+</div>
+
+
+<% if @show_hit_stay_buttons %> 
+  <form class="form-inline" action ="/game/hit/player" method="post">
+    <input type="submit" class="btn" value="Hit"/>
+  </form>
+  <form class="form-inline" action ="/game/stay/player" method="post">
+    <input type="submit" class="btn" value="Stay"/>
+  </form>
+<% else %>
+  NOTHING HERE
+<% end %>
+  
