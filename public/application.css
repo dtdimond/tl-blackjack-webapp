@@ -1,0 +1,47 @@
+input#sign_in_input {
+  cursor: auto; 
+  background-attachment: scroll; 
+  background-position: 100% 50%; 
+  background-repeat: no-repeat;
+}
+
+input#hit {
+  float: left;
+  margin-right: 10px;
+}
+
+input#stay {
+  float: left;
+  margin-right: 75px;
+}
+
+h4#hand_total{
+  float: middle;
+  margin-right: 40px;
+}
+
+h4#name_title{
+  float: left;
+  margin-right: 40px;
+}
+
+h4#prompt{
+  float: left;
+}
+
+form#dealer_btn{
+  float: left;
+}
+
+h4#play_again{
+  margin-right: 5px;
+}
+
+input#yes{
+  float: left;
+  margin-right: 5px;
+}
+
+input#no{
+  float: middle;
+}

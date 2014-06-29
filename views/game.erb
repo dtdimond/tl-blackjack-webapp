@@ -1,26 +1,59 @@
+<!--Play again buttons-->
+<% if @show_play_again_btns %>
+  <p>
+    <strong>Play again?</strong>
+    <a href="/game" class="btn btn-primary">Yes</a>
+    <a href="/logout" class="btn"> No</a>
+  </p>
+<% end %>
 
+<!--Dealer's information-->
 <div class="well">
-  <h4>Dealer's Cards</h4>
+  <h4 id="name_title">Dealer's Cards</h4>
+  <h4 id="hand_total">Total: <%=if @dealers_turn || @show_play_again_btns then get_score(session[:dealer_hand]) else get_score(session[:dealer_hand][1..-1]) end%></h4>
+
+  <!--Show buttons if player's turn has ended-->
+  <% if !@show_hit_stay_buttons && !@dealers_turn && !@show_play_again_btns %>
+    <form class="form-inline" action="/game/dealer_start" method="post">
+      <input id="dealer_btn" type="submit" class="btn btn-success" value="Show dealer's cards."/>
+    </form>
+  <% elsif @dealers_turn && !@show_play_again_btns %>
+     <form class="form-inline" action="/game/hit/dealer" method="post">
+      <input id="dealer_btn" type="submit" class="btn btn-success" value="Continue."/>
+    </form>
+  <% end %>
+
+  <!--cards: facedown or faceup depending on who's turn-->
+  <% if !@dealers_turn && !@show_play_again_btns %>
+      <%=get_card_image("facedown")%>
+      <%=get_card_image(session[:dealer_hand][1])%>
+  <% else %>
     <% session[:dealer_hand].each do |card| %>
       <%=get_card_image(card)%>
     <% end %>
+  <% end %>
 </div>
+
+
+
+
+<!-- Player's information-->
 <div class="well">
-  <h4>Player's Cards</h4>
+  <h4 id="name_title"><%=session[:name]%>'s Cards</h4>
+  <h4 id="hand_total">Total: <%=get_score(session[:player_hand])%></h4>
     <% session[:player_hand].each do |card| %>
       <%=get_card_image(card)%>
     <% end %>
 </div>
 
-
-<% if @show_hit_stay_buttons %> 
+<!--Hit/Stay buttons if applicable-->
+<% if @show_hit_stay_buttons && !@show_play_again_btns %> 
   <form class="form-inline" action ="/game/hit/player" method="post">
-    <input type="submit" class="btn" value="Hit"/>
+    <input id="hit" type="submit" class="btn btn-success" value="Hit"/>
   </form>
   <form class="form-inline" action ="/game/stay/player" method="post">
-    <input type="submit" class="btn" value="Stay"/>
+    <input id="stay" type="submit" class="btn btn-warning" value="Stay"/>
   </form>
-<% else %>
-  NOTHING HERE
+  <h4 id="prompt">What would you like to do?</h4>
 <% end %>
   
