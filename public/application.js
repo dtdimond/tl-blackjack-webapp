@@ -1,17 +1,16 @@
 $(document).ready( function() {
 
   $(document).on('click', '#hit input', function() {
-//    $.ajax({
-//      type: 'POST',
-//      url: '/game/hit/player'
-//    }).done(function(msg){
-//      ('#game_template').replaceWith(msg);
-//    });
-    alert('test');
+    $.ajax({
+      type: 'POST',
+      url: '/game/hit/player'
+    }).done(function(msg){
+      ('#game_template').replaceWith(msg);
+    });
     return false;
   });
 
-  $('#stay').click(function(){
+  $(document).on('click', '#stay', function() {
     alert("test");
     return false;
   }
