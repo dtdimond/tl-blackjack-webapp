@@ -1,31 +1,65 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My First App</title>
+    <title>Blackjack</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/application.css">
+    <script type="text/javascript" src="/public/application.js" ></script>
   </head>
   <body style="padding-top: 50px;">
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <ul class="nav">
-             <% if session[:name] %>
-               <li><a href="/game">New Game</a></li>
-             <% end %>
-           </ul>
-           <% if !session[:name] %>
-             <form class="navbar-form pull-right" action="/game" method="post">
-               <input id="sign_in_input" class="span2" type="text" name="username" placeholder="Name" autocomplete="off" >
-               <button type="submit" class="btn">Sign in</button>
-             </form>
-           <% else %>
-             <ul class="nav pull-right">
-               <li class="navbar-text">Welcome, <%=session[:name]%>!</li>
-               <li><a href="/logout">Logout</a></li>
-             </ul>
-           <% end %>
+
+          <!-- If not logged in -->
+          <% if !session[:name] %>
+
+            <!-- Display login form -->
+            <form class="navbar-form pull-right" action="/game" method="post">
+              <input id="sign_in_input" class="span2" type="text" name="username" placeholder="Name" autocomplete="off" >
+              <button type="submit" class="btn">Sign in</button>
+            </form>
+
+          <!-- else if logged in -->
+          <% else %>
+            <!-- Display new game link and money left/wager text. -->
+            <ul class="nav">
+              <li><a href="/game">New Game</a></li>
+              <li class="divider-vertical"></li>
+              <li class="navbar-text">You have $<%=session[:player_pot]%></li>
+              <li class="divider-vertical"></li>
+              <%if @show_wager%><li class="navbar-text"><strong>Choose Amount to Wager:</strong></li>
+              <%else%><li class="navbar-text">Your Wager: $<%=session[:player_bet]%></li><%end%>
+            </ul>
+
+            <!-- Display betting amount dropdown: only if @show_wager -->
+            <%if @show_wager%>
+              <div class="btn-group">
+                <button class="btn">$<%= session[:player_bet] %></button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <!-- dropdown menu links -->
+                  <li><a href='/game/bet/5'>$5</a></li>
+                  <li><a href='/game/bet/10'>$10</a></li>
+                  <li><a href='/game/bet/25'>$25</a></li>
+                  <li><a href='/game/bet/50'>$50</a></li>
+                </ul>
+              </div>
+
+            <%end%>
+ 
+            <!-- Display welcome message and logout link -->
+            <ul class="nav pull-right">
+              <li class="navbar-text">Welcome, <%=session[:name]%>!</li>
+              <li><a href="/logout">Logout</a></li>
+            </ul>
+
+          <% end %>
         </div>
       </div>
     </div>

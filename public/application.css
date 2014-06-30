@@ -5,7 +5,7 @@ input#sign_in_input {
   background-repeat: no-repeat;
 }
 
-input#hit {
+form#hit input {
   float: left;
   margin-right: 10px;
 }

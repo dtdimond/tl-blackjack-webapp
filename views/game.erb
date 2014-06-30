@@ -1,3 +1,4 @@
+<div id="game_template">
 <!--Play again buttons-->
 <% if @show_play_again_btns %>
   <p>
@@ -7,6 +8,7 @@
   </p>
 <% end %>
 
+<%if !@show_wager%>
 <!--Dealer's information-->
 <div class="well">
   <h4 id="name_title">Dealer's Cards</h4>
@@ -48,12 +50,13 @@
 
 <!--Hit/Stay buttons if applicable-->
 <% if @show_hit_stay_buttons && !@show_play_again_btns %> 
-  <form class="form-inline" action ="/game/hit/player" method="post">
-    <input id="hit" type="submit" class="btn btn-success" value="Hit"/>
+  <form id="hit" class="form-inline" action ="/game/hit/player" method="post">
+    <input type="submit" class="btn btn-success" value="Hit"/>
   </form>
   <form class="form-inline" action ="/game/stay/player" method="post">
     <input id="stay" type="submit" class="btn btn-warning" value="Stay"/>
   </form>
   <h4 id="prompt">What would you like to do?</h4>
 <% end %>
-  
+<%end%>
+</div>

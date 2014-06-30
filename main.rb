@@ -9,7 +9,10 @@ before do
   @show_hit_stay_buttons = true
   @dealers_turn = false
   @show_play_again_btns = false
+  @show_wager = false
 end
+
+
 
 #******* Routes *********
 
@@ -41,13 +44,14 @@ post '/game' do
   end
 
   session[:name] = params[:username]
+  session[:player_pot] = 50 
   redirect '/game'
 end
 
 #Start game
 get '/game' do
   initialize_game
-  check_player_bust_blackjack
+  @show_wager = true
   erb :game
 end
 
@@ -55,7 +59,7 @@ end
 post '/game/hit/player' do
   session[:player_hand] << session[:deck].pop
   check_player_bust_blackjack
-  erb :game
+  erb :game, layout: false
 end
 
 #Player stays
@@ -73,6 +77,7 @@ post '/game/dealer_start' do
   erb :game
 end
 
+#Dealer's turn: hit/stay
 post '/game/hit/dealer' do 
   @dealers_turn = true
   @show_hit_stay_buttons = false
@@ -86,20 +91,65 @@ post '/game/hit/dealer' do
   erb :game
 end
 
+#Both stay - find out who won
 get '/game/who_won' do
   if get_score(session[:player_hand]) > get_score(session[:dealer_hand])
     @success = "Dealer stays with a #{get_score(session[:dealer_hand])}. You win!"
+    player_win_bet
   else
     @error = "Dealer stays with a #{get_score(session[:dealer_hand])}. You lose."
+    player_lose_bet
   end
 
   @show_play_again_btns = true
   erb :game
 end
 
+#Change bet to 5 
+get '/game/bet/5' do
+  session[:player_bet] = 5
+
+  #Cards already dealt, check blackjack/bust
+  check_player_bust_blackjack
+  erb :game
+end
+
+#Change bet to 10
+get '/game/bet/10' do
+  session[:player_bet] = 10
+  check_wager
+  check_player_bust_blackjack
+  erb :game
+end
+
+#Change bet to 25
+get '/game/bet/25' do
+  session[:player_bet] = 25 
+  check_wager
+  check_player_bust_blackjack
+  erb :game
+end
+
+#Change bet to 50
+get '/game/bet/50' do
+  session[:player_bet] = 50
+  check_wager
+  check_player_bust_blackjack
+  erb :game
+end
+
+
 
 #********** Helpers ************
 helpers do
+  def check_wager
+    if session[:player_bet] > session[:player_pot]
+      @error = "You don't have that much money. Choose less to wager."
+      @show_wager = true
+      halt(erb :game)
+    end
+  end
+
  def get_card_image(card)
    if card == "facedown"
      return "<img src='/images/cards/cover.jpg'>"
@@ -118,6 +168,9 @@ helpers do
 
     #deal hand
     deal_cards
+
+    #init wager
+    session[:player_bet] = 5
   end
 
   def deal_cards
@@ -135,10 +188,12 @@ helpers do
       @error = "Sorry, you've busted!"
       @show_hit_stay_buttons = false
       @show_play_again_btns = true
+      player_lose_bet
     elsif get_score(session[:player_hand]) == 21
       @success = "Blackjack! You win!"
       @show_hit_stay_buttons = false
       @show_play_again_btns = true
+      player_win_bet
     end
   end
 
@@ -146,9 +201,11 @@ helpers do
     if get_score(session[:dealer_hand]) > 21
       @success = "Dealer bust! You've won!"
       @show_play_again_btns = true
+      player_win_bet
     elsif get_score(session[:dealer_hand]) == 21
       @error = "Sorry, dealer hit blackjack. You lose."
       @show_play_again_btns = true
+      player_lose_bet
     end
   end
 
@@ -157,6 +214,20 @@ helpers do
       return false
     else
       return true
+    end
+  end
+
+  def player_win_bet
+    session[:player_pot] += session[:player_bet]
+  end
+
+  def player_lose_bet
+    session[:player_pot] -= session[:player_bet]
+    if session[:player_pot] <= 0
+      #logout with error message
+      @error = "You're out of money. Get out of my casino!"
+      session[:name] = nil
+      halt(erb :get_name)
     end
   end
 
