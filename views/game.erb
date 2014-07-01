@@ -16,11 +16,11 @@
 
   <!--Show buttons if player's turn has ended-->
   <% if !@show_hit_stay_buttons && !@dealers_turn && !@show_play_again_btns %>
-    <form class="form-inline" action="/game/dealer_start" method="post">
+    <form id="dealer_btn_form" class="form-inline" action="/game/dealer_start" method="post">
       <input id="dealer_btn" type="submit" class="btn btn-success" value="Show dealer's cards."/>
     </form>
   <% elsif @dealers_turn && !@show_play_again_btns %>
-     <form class="form-inline" action="/game/hit/dealer" method="post">
+    <form id="dealer_continue_form" class="form-inline" action="/game/hit/dealer" method="post">
       <input id="dealer_btn" type="submit" class="btn btn-success" value="Continue."/>
     </form>
   <% end %>

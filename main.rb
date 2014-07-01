@@ -66,7 +66,7 @@ end
 post '/game/stay/player' do
   @success = "You stay."
   @show_hit_stay_buttons = false
-  erb :game
+  erb :game, layout: false
 end
 
 #Start dealer turn
@@ -74,7 +74,7 @@ post '/game/dealer_start' do
   @dealers_turn = true
   @show_hit_stay_buttons = false
   check_dealer_bust_blackjack
-  erb :game
+  erb :game, layout: false
 end
 
 #Dealer's turn: hit/stay
@@ -88,7 +88,7 @@ post '/game/hit/dealer' do
     session[:dealer_hand] << session[:deck].pop
     check_dealer_bust_blackjack
   end
-  erb :game
+  erb :game, layout: false
 end
 
 #Both stay - find out who won
